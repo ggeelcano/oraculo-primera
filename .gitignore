@@ -1,0 +1,7 @@
+data/
+_prueba/
+_site/
+*.log
+index.html
+app.html
+datos.json
