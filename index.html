@@ -1,0 +1,577 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Pronósticos de Primera 2026-27: quiniela de la jornada, marcadores, simulación de la liga y fiabilidad medida."><meta property="og:title" content="Oráculo de Primera"><meta property="og:description" content="Pronósticos de Primera 2026-27: quiniela de la jornada, marcadores, simulación de la liga y fiabilidad medida."><meta property="og:type" content="website"><style>body{margin:0}img{max-width:100%}</style><title>Oráculo de Primera</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: cabecera con marcador de datos, pestañas fijas, boleto de quiniela arriba y fichas de partido en rejilla de 1-2 columnas */
+:root {
+  --bg: #eef2ee; --surface: #ffffff; --surface-2: #e4eae4; --line: #d0d8d1;
+  --fg: #101a14; --muted: #536059; --accent: #0b6b43; --accent-ink: #ffffff;
+  --home: #2a78d6; --draw: #9c9d95; --away: #eb6834;
+  --ok: #0a8a0a; --bad: #c73434;
+  --font-display: "Big Shoulders Display", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --font-body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1210; --surface: #141c18; --surface-2: #1c2621; --line: #2a3630;
+    --fg: #e5ebe7; --muted: #98a59d; --accent: #45c08b; --accent-ink: #06140d;
+    --home: #3987e5; --draw: #6e6f68; --away: #d95926; --ok: #3ccf5a; --bad: #ef6b6b;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1210; --surface: #141c18; --surface-2: #1c2621; --line: #2a3630;
+  --fg: #e5ebe7; --muted: #98a59d; --accent: #45c08b; --accent-ink: #06140d;
+  --home: #3987e5; --draw: #6e6f68; --away: #d95926; --ok: #3ccf5a; --bad: #ef6b6b;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { overflow-x: hidden; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.45; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.num { font-variant-numeric: tabular-nums; }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* cabecera */
+header.top { padding-block: 22px 14px; }
+.brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.brand h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(34px, 7vw, 52px); line-height: .92; letter-spacing: .01em; text-transform: uppercase; }
+.brand .season { font-family: var(--font-display); font-weight: 600; font-size: 20px; color: var(--muted); letter-spacing: .04em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; color: var(--muted); font-size: 13.5px; }
+.meta b { color: var(--fg); font-weight: 600; }
+
+/* pestañas */
+nav.tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+nav.tabs .wrap { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+nav.tabs .wrap::-webkit-scrollbar { display: none; }
+nav.tabs a { flex: none; padding: 11px 12px 10px; text-decoration: none; color: var(--muted); font-weight: 600; font-size: 14.5px; border-bottom: 3px solid transparent; white-space: nowrap; }
+nav.tabs a:hover { color: var(--fg); }
+nav.tabs a[aria-current="page"] { color: var(--fg); border-bottom-color: var(--accent); }
+
+main { padding-block: 20px 48px; }
+section.view { display: grid; gap: 20px; }
+.section-head { display: flex; justify-content: space-between; align-items: end; gap: 8px 16px; flex-wrap: wrap; }
+.section-head h2 { font-family: var(--font-display); font-weight: 800; font-size: 28px; text-transform: uppercase; letter-spacing: .02em; line-height: 1; }
+.section-head p { margin: 0; color: var(--muted); font-size: 14px; max-width: 60ch; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.lead { color: var(--muted); margin: 0; max-width: 68ch; }
+
+/* escudo de texto */
+.badge { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--c); color: var(--ct); font-family: var(--font-display); font-weight: 800; font-size: 12.5px; letter-spacing: .03em; flex: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+.badge.sm { width: 24px; height: 24px; font-size: 10px; }
+
+/* boleto de quiniela */
+.boleto { padding: 0; overflow: hidden; }
+.boleto-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 14px 16px 10px; border-bottom: 2px solid var(--fg); flex-wrap: wrap; }
+.boleto-head h3 { font-family: var(--font-display); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: .03em; }
+.boleto-head span { color: var(--muted); font-size: 13px; }
+.boleto ol { list-style: none; margin: 0; padding: 0; }
+.boleto li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto 62px; align-items: center; gap: 10px; padding: 7px 16px; border-bottom: 1px solid var(--line); }
+.boleto li:last-child { border-bottom: 0; }
+.boleto .n { font-family: var(--font-display); font-weight: 800; color: var(--muted); font-size: 17px; text-align: right; }
+.boleto .vs { display: flex; align-items: center; gap: 6px; min-width: 0; font-weight: 600; }
+.boleto .vs .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.boleto .vs .sep { color: var(--muted); font-weight: 400; }
+.cells { display: flex; gap: 4px; }
+.cell { width: 30px; height: 28px; display: grid; place-items: center; border: 1.5px solid var(--line); border-radius: 5px; font-family: var(--font-display); font-weight: 800; font-size: 16px; color: var(--muted); }
+.cell.main { background: var(--fg); border-color: var(--fg); color: var(--bg); }
+.cell.cover { border-color: var(--fg); color: var(--fg); background: repeating-linear-gradient(135deg, transparent 0 4px, color-mix(in srgb, var(--fg) 14%, transparent) 4px 6px); }
+.cov { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); text-align: right; }
+.boleto-legend { display: flex; gap: 6px 16px; flex-wrap: wrap; padding: 10px 16px 14px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); }
+.boleto-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.boleto-legend .cell { width: 20px; height: 18px; font-size: 11px; }
+
+/* fichas de partido */
+.matches { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); gap: 14px; }
+.match { padding: 14px 16px 12px; display: grid; gap: 12px; min-width: 0; }
+.when { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 13px; }
+.when .sign { font-family: var(--font-display); font-weight: 800; font-size: 15px; color: var(--fg); text-transform: none; letter-spacing: .03em; }
+.teams { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 10px; }
+.team { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 700; font-size: 16px; }
+.team span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.team.away { flex-direction: row-reverse; text-align: right; }
+.xg { text-align: center; font-family: var(--font-display); font-weight: 800; font-size: 26px; line-height: 1; white-space: nowrap; }
+.xg small { display: block; font-family: var(--font-body); font-weight: 500; font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 3px; }
+.pbar { display: flex; gap: 2px; height: 30px; border-radius: 6px; overflow: hidden; }
+.pbar div { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; min-width: 0; white-space: nowrap; overflow: hidden; }
+.pbar .h { background: var(--home); justify-content: flex-start; padding-left: 8px; }
+.pbar .d { background: var(--draw); }
+.pbar .a { background: var(--away); justify-content: flex-end; padding-right: 8px; }
+.pbar.thin { height: 8px; border-radius: 4px; }
+.plabels { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; font-size: 13px; color: var(--muted); margin-top: -6px; }
+.plabels b { color: var(--fg); font-weight: 700; }
+.plabels :last-child { text-align: right; }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.facts div { background: var(--surface-2); border-radius: 8px; padding: 7px 9px; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 2px; }
+.facts dt { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.facts dd { margin: 0; font-weight: 700; font-size: 16px; }
+.compare { display: grid; gap: 5px; font-size: 12.5px; color: var(--muted); }
+.compare .row { display: grid; grid-template-columns: 54px minmax(0, 1fr) 92px; gap: 8px; align-items: center; }
+.compare .row span:last-child { text-align: right; color: var(--fg); }
+details.more { border-top: 1px solid var(--line); padding-top: 8px; }
+details.more summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: 14px; list-style: none; padding: 4px 0; }
+details.more summary::-webkit-details-marker { display: none; }
+details.more summary::before { content: "+ "; }
+details.more[open] summary::before { content: "− "; }
+.more-body { display: grid; gap: 14px; padding-top: 10px; }
+.sub { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; margin-bottom: 6px; }
+
+/* rejilla de marcadores */
+.sgrid { display: grid; grid-template-columns: 22px repeat(6, minmax(0, 1fr)); gap: 2px; font-size: 12px; }
+.sgrid div { display: grid; place-items: center; height: 28px; border-radius: 3px; }
+.sgrid .ax { color: var(--muted); font-weight: 600; }
+.sgrid .c { background: color-mix(in srgb, var(--accent) calc(var(--v) * 1%), var(--surface-2)); color: var(--fg); }
+.sgrid .c.hi { color: var(--accent-ink); font-weight: 700; }
+.sgrid-caption { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+
+.form { display: flex; gap: 3px; }
+.f { width: 22px; height: 22px; display: grid; place-items: center; border-radius: 4px; font-size: 11.5px; font-weight: 700; color: #fff; }
+.f.G { background: var(--ok); } .f.E { background: var(--draw); } .f.P { background: var(--bad); }
+.h2h { display: grid; gap: 3px; font-size: 13px; margin: 0; padding: 0; list-style: none; }
+.h2h li { display: flex; justify-content: space-between; gap: 8px; }
+.h2h li span:first-child { color: var(--muted); }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+/* tablas */
+.tbl-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 8px 9px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; background: var(--surface); position: sticky; top: 0; }
+td.l, th.l { text-align: left; }
+tbody tr:last-child td { border-bottom: 0; }
+td.tm { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+td.pts { font-weight: 800; font-size: 15px; }
+td.pos { color: var(--muted); font-weight: 700; width: 30px; }
+tr.zone-ucl td.pos { box-shadow: inset 3px 0 0 var(--home); }
+tr.zone-rel td.pos { box-shadow: inset 3px 0 0 var(--bad); }
+.pos-legend { display: flex; gap: 6px 18px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); }
+.pos-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.pos-legend i { width: 4px; height: 14px; display: inline-block; border-radius: 2px; }
+.mini { display: inline-grid; grid-template-columns: 44px 52px; align-items: center; gap: 6px; justify-content: end; }
+.mini i { display: block; height: 6px; border-radius: 3px; background: var(--accent); justify-self: start; min-width: 1px; }
+.mini.rel i { background: var(--bad); }
+.pos-pos { color: var(--ok); } .pos-neg { color: var(--bad); }
+
+/* cara a cara */
+.picker { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 10px; align-items: end; padding: 14px 16px; }
+.picker label { display: grid; gap: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; min-width: 0; }
+.picker select { font: inherit; font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; width: 100%; min-width: 0; }
+.swap { font: inherit; font-weight: 700; border: 1px solid var(--line); background: var(--surface); color: var(--fg); border-radius: 8px; height: 40px; padding: 0 12px; cursor: pointer; }
+.swap:hover { border-color: var(--fg); }
+
+/* gráficos */
+.chart-card { padding: 14px 16px; min-width: 0; }
+.chart-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+.chart-card p.note { margin: 0 0 10px; color: var(--muted); font-size: 13px; }
+svg text { font-family: var(--font-body); }
+.tip { position: fixed; z-index: 20; pointer-events: none; background: var(--fg); color: var(--bg); padding: 7px 10px; border-radius: 6px; font-size: 13px; line-height: 1.35; max-width: 240px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 14px; }
+
+/* fiabilidad */
+.scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; }
+.score { padding: 14px 16px; display: grid; gap: 4px; }
+.score .big { font-family: var(--font-display); font-weight: 800; font-size: 44px; line-height: 1; }
+.score .lbl { font-weight: 700; }
+.score .why { color: var(--muted); font-size: 13px; }
+.hbars { display: grid; gap: 10px; }
+.hbar { display: grid; grid-template-columns: minmax(0, 150px) minmax(0, 1fr) 54px; gap: 10px; align-items: center; font-size: 14px; }
+.hbar .track { height: 14px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+.hbar .track i { display: block; height: 100%; background: var(--accent); border-radius: 0 4px 4px 0; }
+.hbar.ref .track i { background: var(--draw); }
+.hbar b { text-align: right; }
+.recent { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.recent li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 14px; }
+.ico { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 12px; font-weight: 800; }
+.ico.ok { background: var(--ok); } .ico.ko { background: var(--bad); }
+.prose { max-width: 70ch; display: grid; gap: 10px; }
+.prose p { margin: 0; }
+.prose h3 { font-size: 17px; margin-top: 6px; }
+footer { color: var(--muted); font-size: 12.5px; padding-block: 0 32px; }
+
+@media (max-width: 560px) {
+  .facts dd { font-size: 15px; }
+  .xg { font-size: 22px; }
+  .team, .team.away { flex-direction: column; text-align: center; gap: 5px; font-size: 14.5px; line-height: 1.2; }
+  .team span { white-space: normal; overflow-wrap: anywhere; }
+  .boleto .vs .badge { display: none; }
+  .badge { width: 30px; height: 30px; font-size: 11px; }
+  .boleto li { grid-template-columns: 20px minmax(0, 1fr) auto; padding: 7px 12px; gap: 8px; }
+  .boleto .cov { display: none; }
+  .cell { width: 27px; height: 26px; font-size: 15px; }
+  .picker { grid-template-columns: 1fr; }
+  .swap { justify-self: start; }
+  .hbar { grid-template-columns: 100px minmax(0, 1fr) 48px; font-size: 13px; }
+  .two { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pbar div, .mini i, .hbar .track i { transition: width .35s ease; }
+}
+</style>
+
+</head><body><header class="top wrap">
+  <div class="brand"><h1>Oráculo de Primera</h1><span class="season" id="season"></span></div>
+  <div class="meta" id="meta"></div>
+</header>
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap">
+    <a href="#jornada" data-v="jornada">Jornada</a>
+    <a href="#clasificacion" data-v="clasificacion">Clasificación</a>
+    <a href="#cara-a-cara" data-v="cara-a-cara">Cara a cara</a>
+    <a href="#equipos" data-v="equipos">Equipos</a>
+    <a href="#fiabilidad" data-v="fiabilidad">Fiabilidad</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section class="view" id="v-jornada"></section>
+  <section class="view" id="v-clasificacion" hidden></section>
+  <section class="view" id="v-cara-a-cara" hidden></section>
+  <section class="view" id="v-equipos" hidden></section>
+  <section class="view" id="v-fiabilidad" hidden></section>
+</main>
+<footer class="wrap" id="foot"></footer>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+const D = {"generated":1793983456890,"lastMatch":1793577600000,"played":109,"totalMatches":3608,"season":"2026-27","cfg":{"halfLife":35,"k":0.05,"m":0.9,"ridge":0.05,"rho":-0.04,"beta":1},"names":{"Alaves":["Alavés","ALA","#1f4e9e","Alavés"],"Ath Bilbao":["Athletic Club","ATH","#d4202c","Athletic"],"Ath Madrid":["Atlético de Madrid","ATM","#c8312a","Atlético"],"Barcelona":["Barcelona","BAR","#a50044","Barcelona"],"Celta":["Celta","CEL","#5fa8dc","Celta"],"La Coruna":["Deportivo","DEP","#1b4f9c","Deportivo"],"Elche":["Elche","ELC","#0a6b34","Elche"],"Espanol":["Espanyol","ESP","#0076c0","Espanyol"],"Getafe":["Getafe","GET","#00529b","Getafe"],"Levante":["Levante","LEV","#a6093d","Levante"],"Malaga":["Málaga","MAL","#2b7ac4","Málaga"],"Osasuna":["Osasuna","OSA","#c4161c","Osasuna"],"Santander":["Racing de Santander","RAC","#0b7a3b","Racing"],"Vallecano":["Rayo Vallecano","RAY","#d92b2b","Rayo"],"Betis":["Real Betis","BET","#00954c","Betis"],"Real Madrid":["Real Madrid","RMA","#c9a227","Real Madrid"],"Sociedad":["Real Sociedad","RSO","#0067b1","Real Sociedad"],"Sevilla":["Sevilla","SEV","#d0021b","Sevilla"],"Valencia":["Valencia","VAL","#e07b00","Valencia"],"Villarreal":["Villarreal","VIL","#e8c800","Villarreal"]},"params":{"mu":0.215,"hfa":0.252,"rho":-0.04,"beta":1,"teams":{"Alaves":{"a":-0.029,"d":0.151},"Ath Bilbao":{"a":0.19,"d":0.31},"Ath Madrid":{"a":0.434,"d":0.41},"Barcelona":{"a":0.903,"d":0.419},"Celta":{"a":-0.044,"d":0.231},"La Coruna":{"a":-0.089,"d":0.074},"Elche":{"a":-0.04,"d":-0.034},"Espanol":{"a":-0.04,"d":0.067},"Getafe":{"a":-0.292,"d":0.174},"Levante":{"a":-0.014,"d":-0.048},"Malaga":{"a":-0.153,"d":-0.071},"Osasuna":{"a":-0.096,"d":0.054},"Santander":{"a":0.07,"d":-0.16},"Vallecano":{"a":0.026,"d":0.096},"Betis":{"a":0.28,"d":0.15},"Real Madrid":{"a":0.726,"d":0.498},"Sociedad":{"a":0.24,"d":0.089},"Sevilla":{"a":0.031,"d":0.178},"Valencia":{"a":-0.09,"d":0.107},"Villarreal":{"a":0.339,"d":0.196}}},"table":[{"pos":1,"t":"Barcelona","pj":11,"g":10,"e":0,"p":1,"gf":46,"gc":12,"pts":30,"xgf":37.27,"xgc":11.63,"nxg":11,"shpg":20.182,"sotpg":8.091,"shcpg":7.091,"sotcpg":3.273,"corpg":6.818,"yelpg":1.545,"red":0,"homePts":15,"homePj":6,"awayPts":15,"awayPj":5,"form":[{"r":"G","gf":3,"gc":1,"rival":"Sevilla","local":false},{"r":"G","gf":3,"gc":0,"rival":"Getafe","local":true},{"r":"G","gf":5,"gc":2,"rival":"Betis","local":false},{"r":"P","gf":1,"gc":2,"rival":"Real Madrid","local":true},{"r":"G","gf":6,"gc":1,"rival":"Alaves","local":true}]},{"pos":2,"t":"Ath Madrid","pj":11,"g":9,"e":1,"p":1,"gf":22,"gc":8,"pts":28,"xgf":17.69,"xgc":11.98,"nxg":11,"shpg":17.364,"sotpg":6.091,"shcpg":11,"sotcpg":3.364,"corpg":5.727,"yelpg":2.182,"red":1,"homePts":13,"homePj":5,"awayPts":15,"awayPj":6,"form":[{"r":"G","gf":2,"gc":1,"rival":"Real Madrid","local":true},{"r":"G","gf":2,"gc":1,"rival":"Alaves","local":false},{"r":"G","gf":1,"gc":0,"rival":"Espanol","local":false},{"r":"G","gf":1,"gc":0,"rival":"La Coruna","local":true},{"r":"G","gf":2,"gc":0,"rival":"Levante","local":false}]},{"pos":3,"t":"Real Madrid","pj":11,"g":9,"e":0,"p":2,"gf":28,"gc":10,"pts":27,"xgf":27.24,"xgc":11.11,"nxg":11,"shpg":17.273,"sotpg":7,"shcpg":13,"sotcpg":4.273,"corpg":6.364,"yelpg":2.091,"red":2,"homePts":15,"homePj":5,"awayPts":12,"awayPj":6,"form":[{"r":"P","gf":1,"gc":2,"rival":"Ath Madrid","local":false},{"r":"G","gf":1,"gc":0,"rival":"Villarreal","local":true},{"r":"G","gf":4,"gc":1,"rival":"Sevilla","local":true},{"r":"G","gf":2,"gc":1,"rival":"Barcelona","local":false},{"r":"G","gf":3,"gc":0,"rival":"Santander","local":false}]},{"pos":4,"t":"Betis","pj":11,"g":7,"e":2,"p":2,"gf":18,"gc":15,"pts":23,"xgf":17.73,"xgc":19.97,"nxg":11,"shpg":17,"sotpg":5.909,"shcpg":14.636,"sotcpg":5.909,"corpg":5.182,"yelpg":1.545,"red":1,"homePts":15,"homePj":6,"awayPts":8,"awayPj":5,"form":[{"r":"E","gf":1,"gc":1,"rival":"La Coruna","local":false},{"r":"G","gf":5,"gc":2,"rival":"Osasuna","local":true},{"r":"P","gf":2,"gc":5,"rival":"Barcelona","local":true},{"r":"E","gf":0,"gc":0,"rival":"Celta","local":false},{"r":"G","gf":2,"gc":1,"rival":"Malaga","local":true}]},{"pos":5,"t":"Sociedad","pj":11,"g":6,"e":1,"p":4,"gf":20,"gc":20,"pts":19,"xgf":15.3,"xgc":18.5,"nxg":11,"shpg":14.364,"sotpg":5.182,"shcpg":15.273,"sotcpg":5.545,"corpg":6.636,"yelpg":2.091,"red":3,"homePts":10,"homePj":5,"awayPts":9,"awayPj":6,"form":[{"r":"G","gf":3,"gc":2,"rival":"Valencia","local":false},{"r":"G","gf":3,"gc":2,"rival":"La Coruna","local":true},{"r":"G","gf":5,"gc":2,"rival":"Malaga","local":false},{"r":"G","gf":2,"gc":1,"rival":"Levante","local":true},{"r":"P","gf":1,"gc":2,"rival":"Ath Bilbao","local":false}]},{"pos":6,"t":"Sevilla","pj":11,"g":5,"e":2,"p":4,"gf":17,"gc":19,"pts":17,"xgf":11.32,"xgc":15.37,"nxg":11,"shpg":12.273,"sotpg":4.545,"shcpg":12.273,"sotcpg":4.727,"corpg":3.273,"yelpg":2.818,"red":4,"homePts":9,"homePj":5,"awayPts":8,"awayPj":6,"form":[{"r":"P","gf":1,"gc":3,"rival":"Barcelona","local":true},{"r":"E","gf":3,"gc":3,"rival":"Levante","local":false},{"r":"P","gf":1,"gc":4,"rival":"Real Madrid","local":false},{"r":"G","gf":2,"gc":0,"rival":"Osasuna","local":true},{"r":"P","gf":1,"gc":3,"rival":"Getafe","local":false}]},{"pos":7,"t":"Ath Bilbao","pj":10,"g":4,"e":3,"p":3,"gf":14,"gc":10,"pts":15,"xgf":15.88,"xgc":11.76,"nxg":10,"shpg":14.8,"sotpg":4.1,"shcpg":10.6,"sotcpg":3.8,"corpg":5.9,"yelpg":1.9,"red":2,"homePts":11,"homePj":6,"awayPts":4,"awayPj":4,"form":[{"r":"E","gf":0,"gc":0,"rival":"Alaves","local":true},{"r":"E","gf":0,"gc":0,"rival":"Valencia","local":false},{"r":"P","gf":1,"gc":3,"rival":"Levante","local":false},{"r":"G","gf":4,"gc":0,"rival":"Getafe","local":true},{"r":"G","gf":2,"gc":1,"rival":"Sociedad","local":true}]},{"pos":8,"t":"La Coruna","pj":11,"g":3,"e":5,"p":3,"gf":15,"gc":14,"pts":14,"xgf":14.02,"xgc":12.99,"nxg":11,"shpg":12.545,"sotpg":4.636,"shcpg":13.091,"sotcpg":4.091,"corpg":5.364,"yelpg":1.727,"red":3,"homePts":9,"homePj":6,"awayPts":5,"awayPj":5,"form":[{"r":"E","gf":1,"gc":1,"rival":"Betis","local":true},{"r":"P","gf":2,"gc":3,"rival":"Sociedad","local":false},{"r":"E","gf":1,"gc":1,"rival":"Levante","local":true},{"r":"P","gf":0,"gc":1,"rival":"Ath Madrid","local":false},{"r":"G","gf":2,"gc":1,"rival":"Osasuna","local":true}]},{"pos":9,"t":"Villarreal","pj":11,"g":3,"e":3,"p":5,"gf":15,"gc":15,"pts":12,"xgf":21.71,"xgc":11.97,"nxg":11,"shpg":16.364,"sotpg":5.818,"shcpg":11.091,"sotcpg":3.545,"corpg":7.273,"yelpg":1.909,"red":1,"homePts":4,"homePj":5,"awayPts":8,"awayPj":6,"form":[{"r":"G","gf":3,"gc":1,"rival":"Levante","local":true},{"r":"P","gf":0,"gc":1,"rival":"Real Madrid","local":false},{"r":"E","gf":0,"gc":0,"rival":"Elche","local":true},{"r":"G","gf":2,"gc":1,"rival":"Valencia","local":false},{"r":"P","gf":0,"gc":1,"rival":"Espanol","local":true}]},{"pos":10,"t":"Celta","pj":11,"g":2,"e":6,"p":3,"gf":10,"gc":10,"pts":12,"xgf":10.25,"xgc":12.79,"nxg":11,"shpg":9.818,"sotpg":3,"shcpg":13.545,"sotcpg":4.455,"corpg":2.818,"yelpg":1.636,"red":1,"homePts":8,"homePj":6,"awayPts":4,"awayPj":5,"form":[{"r":"G","gf":5,"gc":0,"rival":"Santander","local":true},{"r":"E","gf":0,"gc":0,"rival":"Elche","local":false},{"r":"G","gf":2,"gc":1,"rival":"Alaves","local":true},{"r":"E","gf":0,"gc":0,"rival":"Betis","local":true},{"r":"P","gf":0,"gc":3,"rival":"Vallecano","local":false}]},{"pos":11,"t":"Alaves","pj":11,"g":3,"e":3,"p":5,"gf":15,"gc":17,"pts":12,"xgf":13.97,"xgc":14.97,"nxg":11,"shpg":12.727,"sotpg":4.545,"shcpg":12.091,"sotcpg":4.455,"corpg":4,"yelpg":1.818,"red":1,"homePts":10,"homePj":6,"awayPts":2,"awayPj":5,"form":[{"r":"E","gf":0,"gc":0,"rival":"Ath Bilbao","local":false},{"r":"P","gf":1,"gc":2,"rival":"Ath Madrid","local":true},{"r":"P","gf":1,"gc":2,"rival":"Celta","local":false},{"r":"E","gf":1,"gc":1,"rival":"Malaga","local":true},{"r":"P","gf":1,"gc":6,"rival":"Barcelona","local":false}]},{"pos":12,"t":"Vallecano","pj":10,"g":3,"e":3,"p":4,"gf":15,"gc":20,"pts":12,"xgf":13.7,"xgc":16.84,"nxg":10,"shpg":14.7,"sotpg":5,"shcpg":15.5,"sotcpg":5.2,"corpg":5.2,"yelpg":2.5,"red":2,"homePts":10,"homePj":5,"awayPts":2,"awayPj":5,"form":[{"r":"G","gf":2,"gc":1,"rival":"Espanol","local":true},{"r":"E","gf":1,"gc":1,"rival":"Osasuna","local":false},{"r":"E","gf":1,"gc":1,"rival":"Getafe","local":false},{"r":"P","gf":0,"gc":3,"rival":"Elche","local":true},{"r":"G","gf":3,"gc":0,"rival":"Celta","local":true}]},{"pos":13,"t":"Getafe","pj":11,"g":3,"e":3,"p":5,"gf":8,"gc":16,"pts":12,"xgf":7.74,"xgc":14.35,"nxg":11,"shpg":10.545,"sotpg":2.727,"shcpg":14.545,"sotcpg":4.727,"corpg":4,"yelpg":3.091,"red":4,"homePts":12,"homePj":6,"awayPts":0,"awayPj":5,"form":[{"r":"G","gf":1,"gc":0,"rival":"Malaga","local":true},{"r":"P","gf":0,"gc":3,"rival":"Barcelona","local":false},{"r":"E","gf":1,"gc":1,"rival":"Vallecano","local":true},{"r":"P","gf":0,"gc":4,"rival":"Ath Bilbao","local":false},{"r":"G","gf":3,"gc":1,"rival":"Sevilla","local":true}]},{"pos":14,"t":"Espanol","pj":11,"g":3,"e":2,"p":6,"gf":13,"gc":14,"pts":11,"xgf":10.97,"xgc":14.58,"nxg":11,"shpg":11.818,"sotpg":3.364,"shcpg":14.091,"sotcpg":5.364,"corpg":2.545,"yelpg":3.091,"red":1,"homePts":4,"homePj":5,"awayPts":7,"awayPj":6,"form":[{"r":"P","gf":1,"gc":3,"rival":"Elche","local":true},{"r":"E","gf":1,"gc":1,"rival":"Malaga","local":false},{"r":"P","gf":0,"gc":1,"rival":"Ath Madrid","local":true},{"r":"P","gf":1,"gc":2,"rival":"Santander","local":false},{"r":"G","gf":1,"gc":0,"rival":"Villarreal","local":false}]},{"pos":15,"t":"Osasuna","pj":11,"g":3,"e":2,"p":6,"gf":11,"gc":22,"pts":11,"xgf":16.17,"xgc":16.37,"nxg":11,"shpg":10.727,"sotpg":3.909,"shcpg":14,"sotcpg":4.455,"corpg":3.455,"yelpg":2.727,"red":0,"homePts":8,"homePj":5,"awayPts":3,"awayPj":6,"form":[{"r":"E","gf":1,"gc":1,"rival":"Vallecano","local":true},{"r":"P","gf":2,"gc":5,"rival":"Betis","local":false},{"r":"G","gf":2,"gc":0,"rival":"Santander","local":true},{"r":"P","gf":0,"gc":2,"rival":"Sevilla","local":false},{"r":"P","gf":1,"gc":2,"rival":"La Coruna","local":false}]},{"pos":16,"t":"Santander","pj":11,"g":3,"e":2,"p":6,"gf":15,"gc":29,"pts":11,"xgf":14.78,"xgc":24.68,"nxg":11,"shpg":12.182,"sotpg":4.545,"shcpg":16.364,"sotcpg":6.182,"corpg":5,"yelpg":2.636,"red":1,"homePts":11,"homePj":6,"awayPts":0,"awayPj":5,"form":[{"r":"P","gf":0,"gc":5,"rival":"Celta","local":false},{"r":"E","gf":2,"gc":2,"rival":"Valencia","local":true},{"r":"P","gf":0,"gc":2,"rival":"Osasuna","local":false},{"r":"G","gf":2,"gc":1,"rival":"Espanol","local":true},{"r":"P","gf":0,"gc":3,"rival":"Real Madrid","local":true}]},{"pos":17,"t":"Elche","pj":11,"g":2,"e":4,"p":5,"gf":14,"gc":18,"pts":10,"xgf":13.53,"xgc":19.36,"nxg":11,"shpg":11.909,"sotpg":4.545,"shcpg":14.273,"sotcpg":4.364,"corpg":4.545,"yelpg":2.545,"red":1,"homePts":1,"homePj":5,"awayPts":9,"awayPj":6,"form":[{"r":"G","gf":3,"gc":1,"rival":"Espanol","local":false},{"r":"E","gf":0,"gc":0,"rival":"Celta","local":true},{"r":"E","gf":0,"gc":0,"rival":"Villarreal","local":false},{"r":"G","gf":3,"gc":0,"rival":"Vallecano","local":false},{"r":"P","gf":0,"gc":1,"rival":"Valencia","local":true}]},{"pos":18,"t":"Levante","pj":11,"g":2,"e":4,"p":5,"gf":16,"gc":21,"pts":10,"xgf":14.84,"xgc":21.03,"nxg":11,"shpg":12.091,"sotpg":4.273,"shcpg":15.545,"sotcpg":5.182,"corpg":3.545,"yelpg":1.364,"red":0,"homePts":7,"homePj":5,"awayPts":3,"awayPj":6,"form":[{"r":"E","gf":3,"gc":3,"rival":"Sevilla","local":true},{"r":"E","gf":1,"gc":1,"rival":"La Coruna","local":false},{"r":"G","gf":3,"gc":1,"rival":"Ath Bilbao","local":true},{"r":"P","gf":1,"gc":2,"rival":"Sociedad","local":false},{"r":"P","gf":0,"gc":2,"rival":"Ath Madrid","local":true}]},{"pos":19,"t":"Valencia","pj":11,"g":2,"e":3,"p":6,"gf":8,"gc":17,"pts":9,"xgf":11.23,"xgc":16.12,"nxg":11,"shpg":10.364,"sotpg":2.909,"shcpg":15.545,"sotcpg":4.727,"corpg":4,"yelpg":2.455,"red":1,"homePts":2,"homePj":6,"awayPts":7,"awayPj":5,"form":[{"r":"P","gf":2,"gc":3,"rival":"Sociedad","local":true},{"r":"E","gf":2,"gc":2,"rival":"Santander","local":false},{"r":"E","gf":0,"gc":0,"rival":"Ath Bilbao","local":true},{"r":"P","gf":1,"gc":2,"rival":"Villarreal","local":true},{"r":"G","gf":1,"gc":0,"rival":"Elche","local":false}]},{"pos":20,"t":"Malaga","pj":11,"g":0,"e":5,"p":6,"gf":8,"gc":21,"pts":5,"xgf":9.7,"xgc":18.67,"nxg":11,"shpg":10.818,"sotpg":3.182,"shcpg":16,"sotcpg":5.727,"corpg":5,"yelpg":1.909,"red":0,"homePts":3,"homePj":5,"awayPts":2,"awayPj":6,"form":[{"r":"P","gf":0,"gc":1,"rival":"Getafe","local":false},{"r":"E","gf":1,"gc":1,"rival":"Espanol","local":true},{"r":"P","gf":2,"gc":5,"rival":"Sociedad","local":true},{"r":"E","gf":1,"gc":1,"rival":"Alaves","local":false},{"r":"P","gf":1,"gc":2,"rival":"Betis","local":false}]}],"upcoming":[{"date":1793923200000,"time":"21:00","home":"Sevilla","away":"Alaves","lh":1.49,"la":0.885,"mlh":1.415,"mla":1.008,"model":[0.458,0.278,0.263],"market":[0.507,0.277,0.215],"final":[0.507,0.277,0.215],"over":0.424,"mkOver":0.426,"btts":0.46,"top":[[1,0,0.134],[1,1,0.128],[2,0,0.103],[0,0,0.098],[2,1,0.091]],"grid":[[0.098,0.077,0.036,0.011,0.002,0],[0.134,0.128,0.054,0.016,0.004,0.001],[0.103,0.091,0.04,0.012,0.003,0],[0.051,0.045,0.02,0.006,0.001,0],[0.019,0.017,0.007,0.002,0,0],[0.006,0.005,0.002,0.001,0,0]],"h2h":[{"d":1771027200000,"h":"Sevilla","a":"Alaves","hg":1,"ag":1},{"d":1758326400000,"h":"Alaves","a":"Sevilla","hg":1,"ag":2},{"d":1745107200000,"h":"Sevilla","a":"Alaves","hg":1,"ag":1},{"d":1726790400000,"h":"Alaves","a":"Sevilla","hg":2,"ag":1},{"d":1705017600000,"h":"Sevilla","a":"Alaves","hg":2,"ag":3}]},{"date":1794009600000,"time":"14:00","home":"Malaga","away":"Santander","lh":1.549,"la":1.425,"mlh":1.607,"mla":1.429,"model":[0.414,0.249,0.337],"market":[0.395,0.266,0.339],"final":[0.395,0.266,0.339],"over":0.571,"mkOver":0.573,"btts":0.603,"top":[[1,1,0.117],[2,1,0.087],[1,2,0.08],[1,0,0.075],[0,1,0.068]],"grid":[[0.056,0.068,0.052,0.025,0.009,0.003],[0.075,0.117,0.08,0.038,0.014,0.004],[0.061,0.087,0.062,0.03,0.011,0.003],[0.032,0.045,0.032,0.015,0.005,0.002],[0.012,0.017,0.012,0.006,0.002,0.001],[0.004,0.005,0.004,0.002,0.001,0]],"h2h":[]},{"date":1794009600000,"time":"16:15","home":"Espanol","away":"La Coruna","lh":1.382,"la":1.16,"mlh":1.422,"mla":1.061,"model":[0.448,0.276,0.276],"market":[0.41,0.286,0.304],"final":[0.41,0.286,0.304],"over":0.467,"mkOver":0.469,"btts":0.519,"top":[[1,1,0.131],[1,0,0.104],[2,1,0.087],[0,1,0.086],[0,0,0.084]],"grid":[[0.084,0.086,0.053,0.02,0.006,0.001],[0.104,0.131,0.073,0.028,0.008,0.002],[0.075,0.087,0.051,0.02,0.006,0.001],[0.035,0.04,0.023,0.009,0.003,0.001],[0.012,0.014,0.008,0.003,0.001,0],[0.003,0.004,0.002,0.001,0,0]],"h2h":[]},{"date":1794009600000,"time":"18:30","home":"Osasuna","away":"Ath Bilbao","lh":1.035,"la":1.448,"mlh":1.062,"mla":1.42,"model":[0.277,0.276,0.447],"market":[0.262,0.279,0.459],"final":[0.262,0.279,0.459],"over":0.452,"mkOver":0.454,"btts":0.498,"top":[[1,1,0.13],[0,1,0.116],[1,2,0.091],[0,0,0.089],[0,2,0.088]],"grid":[[0.089,0.116,0.088,0.042,0.015,0.004],[0.081,0.13,0.091,0.044,0.016,0.005],[0.045,0.065,0.047,0.023,0.008,0.002],[0.015,0.022,0.016,0.008,0.003,0.001],[0.004,0.006,0.004,0.002,0.001,0],[0.001,0.001,0.001,0,0,0]],"h2h":[{"d":1776729600000,"h":"Ath Bilbao","a":"Osasuna","hg":1,"ag":0},{"d":1767398400000,"h":"Osasuna","a":"Ath Bilbao","hg":1,"ag":1},{"d":1743292800000,"h":"Ath Bilbao","a":"Osasuna","hg":0,"ag":0},{"d":1734739200000,"h":"Osasuna","a":"Ath Bilbao","hg":1,"ag":2},{"d":1715385600000,"h":"Ath Bilbao","a":"Osasuna","hg":2,"ag":2}]},{"date":1794009600000,"time":"21:00","home":"Valencia","away":"Real Madrid","lh":0.849,"la":2.564,"mlh":0.886,"mla":2.304,"model":[0.125,0.186,0.689],"market":[0.102,0.154,0.744],"final":[0.102,0.154,0.744],"over":0.663,"mkOver":0.663,"btts":0.531,"top":[[0,2,0.108],[0,3,0.093],[1,2,0.092],[0,1,0.082],[1,3,0.079]],"grid":[[0.036,0.082,0.108,0.093,0.059,0.03],[0.025,0.075,0.092,0.079,0.05,0.026],[0.012,0.03,0.039,0.033,0.021,0.011],[0.003,0.009,0.011,0.009,0.006,0.003],[0.001,0.002,0.002,0.002,0.001,0.001],[0,0,0,0,0,0]],"h2h":[{"d":1770508800000,"h":"Valencia","a":"Real Madrid","hg":0,"ag":2},{"d":1761955200000,"h":"Real Madrid","a":"Valencia","hg":4,"ag":0},{"d":1743811200000,"h":"Real Madrid","a":"Valencia","hg":1,"ag":2},{"d":1735862400000,"h":"Valencia","a":"Real Madrid","hg":1,"ag":2},{"d":1709337600000,"h":"Valencia","a":"Real Madrid","hg":2,"ag":2}]},{"date":1794096000000,"time":"14:00","home":"Elche","away":"Betis","lh":1.313,"la":1.675,"mlh":1.319,"mla":1.696,"model":[0.294,0.246,0.459],"market":[0.292,0.257,0.451],"final":[0.292,0.257,0.451],"over":0.574,"mkOver":0.576,"btts":0.599,"top":[[1,1,0.115],[1,2,0.093],[0,1,0.08],[2,1,0.073],[0,2,0.071]],"grid":[[0.055,0.08,0.071,0.039,0.017,0.006],[0.062,0.115,0.093,0.052,0.022,0.007],[0.043,0.073,0.061,0.034,0.014,0.005],[0.019,0.032,0.027,0.015,0.006,0.002],[0.006,0.01,0.009,0.005,0.002,0.001],[0.002,0.003,0.002,0.001,0.001,0]],"h2h":[{"d":1778544000000,"h":"Betis","a":"Elche","hg":2,"ag":1},{"d":1755475200000,"h":"Elche","a":"Betis","hg":1,"ag":1},{"d":1677196800000,"h":"Elche","a":"Betis","hg":2,"ag":3},{"d":1660521600000,"h":"Betis","a":"Elche","hg":3,"ag":0}]},{"date":1794096000000,"time":"16:15","home":"Sociedad","away":"Vallecano","lh":1.976,"la":1.136,"mlh":1.843,"mla":1.163,"model":[0.528,0.236,0.235],"market":[0.563,0.229,0.208],"final":[0.563,0.229,0.208],"over":0.601,"mkOver":0.603,"btts":0.589,"top":[[1,1,0.104],[2,1,0.099],[2,0,0.087],[1,0,0.084],[3,1,0.065]],"grid":[[0.049,0.047,0.029,0.011,0.003,0.001],[0.084,0.104,0.057,0.021,0.006,0.001],[0.087,0.099,0.056,0.021,0.006,0.001],[0.057,0.065,0.037,0.014,0.004,0.001],[0.028,0.032,0.018,0.007,0.002,0],[0.011,0.013,0.007,0.003,0.001,0]],"h2h":[{"d":1777161600000,"h":"Vallecano","a":"Sociedad","hg":3,"ag":3},{"d":1759622400000,"h":"Sociedad","a":"Vallecano","hg":0,"ag":1},{"d":1742083200000,"h":"Vallecano","a":"Sociedad","hg":2,"ag":2},{"d":1723939200000,"h":"Sociedad","a":"Vallecano","hg":1,"ag":2},{"d":1706313600000,"h":"Sociedad","a":"Vallecano","hg":0,"ag":0}]},{"date":1794096000000,"time":"18:30","home":"Celta","away":"Levante","lh":1.622,"la":1.034,"mlh":1.601,"mla":0.971,"model":[0.516,0.26,0.225],"market":[0.504,0.263,0.233],"final":[0.504,0.263,0.233],"over":0.496,"mkOver":0.497,"btts":0.522,"top":[[1,1,0.122],[1,0,0.109],[2,1,0.096],[2,0,0.092],[0,0,0.075]],"grid":[[0.075,0.068,0.038,0.013,0.003,0.001],[0.109,0.122,0.061,0.021,0.005,0.001],[0.092,0.096,0.049,0.017,0.004,0.001],[0.05,0.052,0.027,0.009,0.002,0],[0.02,0.021,0.011,0.004,0.001,0],[0.007,0.007,0.004,0.001,0,0]],"h2h":[{"d":1778544000000,"h":"Celta","a":"Levante","hg":2,"ag":3},{"d":1762041600000,"h":"Levante","a":"Celta","hg":1,"ag":2}]},{"date":1794096000000,"time":"18:30","home":"Villarreal","away":"Getafe","lh":2.015,"la":0.788,"mlh":1.881,"mla":0.761,"model":[0.635,0.224,0.141],"market":[0.657,0.212,0.131],"final":[0.657,0.212,0.131],"over":0.531,"mkOver":0.532,"btts":0.476,"top":[[2,0,0.123],[1,0,0.118],[1,1,0.1],[2,1,0.097],[3,0,0.083]],"grid":[[0.064,0.044,0.019,0.005,0.001,0],[0.118,0.1,0.038,0.01,0.002,0],[0.123,0.097,0.038,0.01,0.002,0],[0.083,0.065,0.026,0.007,0.001,0],[0.042,0.033,0.013,0.003,0.001,0],[0.017,0.013,0.005,0.001,0,0]],"h2h":[{"d":1771027200000,"h":"Getafe","a":"Villarreal","hg":2,"ag":1},{"d":1764979200000,"h":"Villarreal","a":"Getafe","hg":2,"ag":0},{"d":1743292800000,"h":"Getafe","a":"Villarreal","hg":1,"ag":2},{"d":1729382400000,"h":"Villarreal","a":"Getafe","hg":1,"ag":1},{"d":1708041600000,"h":"Villarreal","a":"Getafe","hg":1,"ag":1}]},{"date":1794096000000,"time":"21:00","home":"Ath Madrid","away":"Barcelona","lh":1.528,"la":2.181,"mlh":1.618,"mla":2.031,"model":[0.307,0.22,0.472],"market":[0.26,0.223,0.518],"final":[0.26,0.223,0.518],"over":0.716,"mkOver":0.718,"btts":0.698,"top":[[1,2,0.089],[1,1,0.085],[2,2,0.068],[1,3,0.065],[2,1,0.062]],"grid":[[0.028,0.05,0.058,0.042,0.023,0.01],[0.034,0.085,0.089,0.065,0.035,0.015],[0.029,0.062,0.068,0.049,0.027,0.012],[0.015,0.032,0.035,0.025,0.014,0.006],[0.006,0.012,0.013,0.01,0.005,0.002],[0.002,0.004,0.004,0.003,0.002,0.001]],"h2h":[{"d":1775260800000,"h":"Ath Madrid","a":"Barcelona","hg":1,"ag":2},{"d":1764633600000,"h":"Barcelona","a":"Ath Madrid","hg":3,"ag":1},{"d":1742083200000,"h":"Ath Madrid","a":"Barcelona","hg":2,"ag":4},{"d":1734739200000,"h":"Barcelona","a":"Ath Madrid","hg":1,"ag":2},{"d":1710633600000,"h":"Ath Madrid","a":"Barcelona","hg":0,"ag":3}]}],"sim":[{"t":"Barcelona","xpts":95.006,"champ":0.754,"top4":1,"top6":1,"releg":0,"pos":[0.754,0.223,0.024,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"t":"Real Madrid","xpts":89.681,"champ":0.227,"top4":1,"top6":1,"releg":0,"pos":[0.227,0.657,0.114,0.002,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"t":"Ath Madrid","xpts":80.063,"champ":0.019,"top4":0.992,"top6":0.999,"releg":0,"pos":[0.019,0.119,0.8,0.054,0.006,0.001,0.001,0,0,0,0,0,0,0,0,0,0,0,0,0]},{"t":"Betis","xpts":64.842,"champ":0,"top4":0.519,"top6":0.877,"releg":0,"pos":[0,0.001,0.044,0.474,0.233,0.125,0.066,0.033,0.015,0.005,0.003,0.001,0,0,0,0,0,0,0,0]},{"t":"Ath Bilbao","xpts":59.248,"champ":0,"top4":0.198,"top6":0.645,"releg":0,"pos":[0,0,0.01,0.188,0.243,0.204,0.151,0.093,0.049,0.025,0.017,0.009,0.005,0.003,0.002,0.001,0,0,0,0]},{"t":"Sociedad","xpts":58.268,"champ":0,"top4":0.14,"top6":0.564,"releg":0,"pos":[0,0,0.005,0.135,0.212,0.211,0.163,0.118,0.065,0.037,0.023,0.012,0.008,0.005,0.003,0.001,0.001,0,0,0]},{"t":"Villarreal","xpts":56.071,"champ":0,"top4":0.093,"top6":0.454,"releg":0.001,"pos":[0,0,0.003,0.09,0.163,0.198,0.185,0.137,0.086,0.052,0.033,0.021,0.013,0.008,0.005,0.004,0.002,0.001,0.001,0]},{"t":"Sevilla","xpts":53.669,"champ":0,"top4":0.045,"top6":0.274,"releg":0.004,"pos":[0,0,0.001,0.044,0.094,0.136,0.176,0.172,0.125,0.083,0.059,0.037,0.027,0.018,0.012,0.008,0.005,0.003,0.001,0]},{"t":"Vallecano","xpts":46.55,"champ":0,"top4":0.006,"top6":0.055,"releg":0.06,"pos":[0,0,0,0.006,0.015,0.034,0.06,0.09,0.122,0.118,0.108,0.094,0.08,0.07,0.056,0.047,0.04,0.032,0.02,0.009]},{"t":"Alaves","xpts":45.4,"champ":0,"top4":0.003,"top6":0.037,"releg":0.071,"pos":[0,0,0,0.003,0.011,0.023,0.051,0.078,0.102,0.114,0.106,0.104,0.089,0.078,0.068,0.057,0.047,0.038,0.025,0.008]},{"t":"Celta","xpts":45.198,"champ":0,"top4":0.002,"top6":0.036,"releg":0.069,"pos":[0,0,0,0.002,0.01,0.023,0.047,0.077,0.1,0.111,0.11,0.102,0.089,0.081,0.069,0.062,0.048,0.038,0.023,0.009]},{"t":"La Coruna","xpts":43.182,"champ":0,"top4":0.001,"top6":0.018,"releg":0.124,"pos":[0,0,0,0.001,0.005,0.012,0.025,0.046,0.072,0.089,0.097,0.095,0.099,0.096,0.089,0.082,0.069,0.061,0.043,0.02]},{"t":"Espanol","xpts":42.351,"champ":0,"top4":0,"top6":0.013,"releg":0.155,"pos":[0,0,0,0,0.002,0.01,0.022,0.04,0.062,0.083,0.088,0.09,0.098,0.091,0.089,0.09,0.08,0.073,0.055,0.028]},{"t":"Valencia","xpts":40.44,"champ":0,"top4":0,"top6":0.006,"releg":0.25,"pos":[0,0,0,0,0.001,0.004,0.011,0.023,0.038,0.053,0.066,0.078,0.084,0.091,0.097,0.101,0.101,0.098,0.098,0.055]},{"t":"Levante","xpts":40.312,"champ":0,"top4":0,"top6":0.006,"releg":0.251,"pos":[0,0,0,0,0.001,0.005,0.01,0.022,0.04,0.053,0.066,0.076,0.086,0.091,0.095,0.1,0.105,0.099,0.096,0.055]},{"t":"Elche","xpts":40.197,"champ":0,"top4":0,"top6":0.006,"releg":0.259,"pos":[0,0,0,0,0.001,0.004,0.01,0.021,0.039,0.053,0.064,0.077,0.084,0.092,0.099,0.094,0.103,0.106,0.096,0.057]},{"t":"Osasuna","xpts":39.772,"champ":0,"top4":0,"top6":0.004,"releg":0.292,"pos":[0,0,0,0,0.001,0.003,0.009,0.018,0.031,0.041,0.054,0.069,0.081,0.089,0.096,0.104,0.114,0.114,0.108,0.07]},{"t":"Getafe","xpts":39.533,"champ":0,"top4":0,"top6":0.003,"releg":0.302,"pos":[0,0,0,0,0,0.003,0.008,0.015,0.029,0.042,0.054,0.066,0.078,0.086,0.097,0.105,0.113,0.119,0.116,0.067]},{"t":"Santander","xpts":39.138,"champ":0,"top4":0,"top6":0.004,"releg":0.343,"pos":[0,0,0,0,0.001,0.003,0.007,0.015,0.025,0.037,0.048,0.062,0.068,0.083,0.093,0.103,0.111,0.119,0.133,0.091]},{"t":"Malaga","xpts":30.855,"champ":0,"top4":0,"top6":0,"releg":0.817,"pos":[0,0,0,0,0,0,0,0.001,0.001,0.003,0.005,0.009,0.012,0.019,0.029,0.042,0.062,0.1,0.186,0.53]}],"ratings":[{"t":"Barcelona","att":3.471,"def":0.925,"a":0.903,"d":0.419},{"t":"Real Madrid","att":2.907,"def":0.854,"a":0.726,"d":0.498},{"t":"Ath Madrid","att":2.17,"def":0.933,"a":0.434,"d":0.41},{"t":"Villarreal","att":1.974,"def":1.156,"a":0.339,"d":0.196},{"t":"Ath Bilbao","att":1.7,"def":1.031,"a":0.19,"d":0.31},{"t":"Betis","att":1.86,"def":1.21,"a":0.28,"d":0.15},{"t":"Sociedad","att":1.789,"def":1.286,"a":0.24,"d":0.089},{"t":"Sevilla","att":1.45,"def":1.177,"a":0.031,"d":0.178},{"t":"Celta","att":1.345,"def":1.117,"a":-0.044,"d":0.231},{"t":"Vallecano","att":1.443,"def":1.278,"a":0.026,"d":0.096},{"t":"Alaves","att":1.367,"def":1.21,"a":-0.029,"d":0.151},{"t":"Espanol","att":1.351,"def":1.315,"a":-0.04,"d":0.067},{"t":"Valencia","att":1.286,"def":1.264,"a":-0.09,"d":0.107},{"t":"La Coruna","att":1.287,"def":1.306,"a":-0.089,"d":0.074},{"t":"Osasuna","att":1.277,"def":1.332,"a":-0.096,"d":0.054},{"t":"Levante","att":1.387,"def":1.476,"a":-0.014,"d":-0.048},{"t":"Elche","att":1.352,"def":1.454,"a":-0.04,"d":-0.034},{"t":"Getafe","att":1.05,"def":1.181,"a":-0.292,"d":0.174},{"t":"Santander","att":1.509,"def":1.651,"a":0.07,"d":-0.16},{"t":"Malaga","att":1.207,"def":1.51,"a":-0.153,"d":-0.071}],"current":{"n":87,"hitModel":50,"hitMarket":50,"hitFinal":50,"llModel":79.33823056175794,"llMarket":79.52223070583149,"llFinal":79.52223070583149,"nMk":87,"recent":[{"d":1793577600000,"h":"La Coruna","a":"Osasuna","hg":2,"ag":1,"p":[0.438,0.29,0.273],"ok":true},{"d":1793491200000,"h":"Ath Bilbao","a":"Sociedad","hg":2,"ag":1,"p":[0.441,0.261,0.298],"ok":true},{"d":1793491200000,"h":"Elche","a":"Valencia","hg":0,"ag":1,"p":[0.407,0.281,0.311],"ok":false},{"d":1793491200000,"h":"Santander","a":"Real Madrid","hg":0,"ag":3,"p":[0.095,0.129,0.776],"ok":true},{"d":1793491200000,"h":"Getafe","a":"Sevilla","hg":3,"ag":1,"p":[0.303,0.316,0.382],"ok":false},{"d":1793404800000,"h":"Barcelona","a":"Alaves","hg":6,"ag":1,"p":[0.861,0.091,0.048],"ok":true},{"d":1793404800000,"h":"Betis","a":"Malaga","hg":2,"ag":1,"p":[0.707,0.176,0.117],"ok":true},{"d":1793404800000,"h":"Vallecano","a":"Celta","hg":3,"ag":0,"p":[0.397,0.289,0.315],"ok":true},{"d":1793404800000,"h":"Levante","a":"Ath Madrid","hg":0,"ag":2,"p":[0.177,0.209,0.615],"ok":true},{"d":1793318400000,"h":"Villarreal","a":"Espanol","hg":0,"ag":1,"p":[0.67,0.189,0.141],"ok":false}],"from":1787961600000},"backtest":{"seasons":["2425","2526"],"model":{"ll":0.9670484519348843,"brier":0.5729664148791673,"acc":0.5407894736842105,"n":760},"market":{"ll":0.9586512503222144,"brier":0.5676864817070651,"acc":0.5473684210526316,"n":760},"blended":{"ll":0.9586512503222144,"brier":0.5676864817070651,"acc":0.5473684210526316,"n":760},"naive":{"ll":1.0593400582518098,"acc":0.46710526315789475,"n":760},"calibration":[{"p":0.0905981145994044,"f":0.056074766355140186,"n":107},{"p":0.19462339970544018,"f":0.18666666666666668,"n":300},{"p":0.3102464776833241,"f":0.27674418604651163,"n":430},{"p":0.4287451815832292,"f":0.4778761061946903,"n":339},{"p":0.5554832361087496,"f":0.5621890547263682,"n":201},{"p":0.6882024943570803,"f":0.717391304347826,"n":92},{"p":0.7932636221757062,"f":0.9411764705882353,"n":51}]},"nRemaining":271,"nSims":20000};
+
+// ---------- utilidades ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = p => Math.round(p * 100) + " %";
+const dec = (x, n = 1) => x.toLocaleString("es-ES", { minimumFractionDigits: n, maximumFractionDigits: n });
+const fmtDay = ms => new Intl.DateTimeFormat("es-ES", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(ms));
+const fmtDate = ms => new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(new Date(ms));
+const fmtShort = ms => new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "short", year: "2-digit", timeZone: "UTC" }).format(new Date(ms));
+const NM = t => D.names[t] ? D.names[t][0] : t;
+const SN = t => D.names[t] ? D.names[t][3] || D.names[t][0] : t;
+const AB = t => D.names[t] ? D.names[t][1] : t.slice(0, 3).toUpperCase();
+function inkFor(hex) {
+  const n = parseInt(hex.slice(1), 16), r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+  return lum > 0.6 ? "#141414" : "#ffffff";
+}
+const badge = (t, sm) => { const c = D.names[t] ? D.names[t][2] : "#777"; return `<span class="badge${sm ? " sm" : ""}" style="--c:${c};--ct:${inkFor(c)}" aria-hidden="true">${AB(t)}</span>`; };
+const SIGNS = ["1", "X", "2"];
+
+function cover(p) {
+  const o = [0, 1, 2].sort((a, b) => p[b] - p[a]);
+  if (p[o[0]] >= 0.50) return { main: o[0], set: [o[0]], label: "Fijo" };
+  if (p[o[0]] + p[o[1]] >= 0.70) return { main: o[0], set: [o[0], o[1]], label: "Doble" };
+  return { main: o[0], set: [0, 1, 2], label: "Triple" };
+}
+const signText = c => c.set.slice().sort().map(i => SIGNS[i]).join("");
+
+// modelo en el navegador (para cara a cara)
+const fact = [1]; for (let i = 1; i <= 15; i++) fact[i] = fact[i - 1] * i;
+const pois = (l, x) => Math.exp(-l) * Math.pow(l, x) / fact[x];
+function modelPredict(h, a) {
+  const P = D.params, th = P.teams[h], ta = P.teams[a], rho = P.rho;
+  const lh = Math.exp(P.mu + P.hfa + th.a - ta.d), la = Math.exp(P.mu + ta.a - th.d);
+  const M = []; let tot = 0;
+  for (let i = 0; i <= 10; i++) { M[i] = []; for (let j = 0; j <= 10; j++) {
+    let p = pois(lh, i) * pois(la, j);
+    if (i === 0 && j === 0) p *= 1 - lh * la * rho; else if (i === 0 && j === 1) p *= 1 + lh * rho;
+    else if (i === 1 && j === 0) p *= 1 + la * rho; else if (i === 1 && j === 1) p *= 1 - rho;
+    M[i][j] = Math.max(p, 0); tot += M[i][j]; } }
+  let p1 = 0, px = 0, p2 = 0, over = 0, btts = 0; const sc = [];
+  for (let i = 0; i <= 10; i++) for (let j = 0; j <= 10; j++) {
+    const p = M[i][j] / tot; M[i][j] = p;
+    if (i > j) p1 += p; else if (i === j) px += p; else p2 += p;
+    if (i + j > 2.5) over += p; if (i > 0 && j > 0) btts += p;
+    if (i <= 6 && j <= 6) sc.push([i, j, p]);
+  }
+  sc.sort((x, y) => y[2] - x[2]);
+  return { lh, la, model: [p1, px, p2], market: null, final: [p1, px, p2], over, mkOver: null, btts, top: sc.slice(0, 5), grid: M.slice(0, 6).map(r => r.slice(0, 6)) };
+}
+
+// ---------- piezas ----------
+function probBar(p, h, a, thin) {
+  const w = p.map(x => Math.max(x * 100, 0.5));
+  const lbl = (x, i) => (thin || x < 0.12) ? "" : (i === 0 ? pct(x) : i === 1 ? "X " + pct(x) : pct(x));
+  return `<div class="pbar${thin ? " thin" : ""}" role="img" aria-label="Gana ${esc(NM(h))} ${pct(p[0])}, empate ${pct(p[1])}, gana ${esc(NM(a))} ${pct(p[2])}">
+    <div class="h" style="width:${w[0]}%" title="1 · ${esc(NM(h))} ${pct(p[0])}">${lbl(p[0], 0)}</div>
+    <div class="d" style="width:${w[1]}%" title="X · empate ${pct(p[1])}">${lbl(p[1], 1)}</div>
+    <div class="a" style="width:${w[2]}%" title="2 · ${esc(NM(a))} ${pct(p[2])}">${lbl(p[2], 2)}</div></div>`;
+}
+function scoreGrid(g, h, a) {
+  let max = 0; g.forEach(r => r.forEach(v => { if (v > max) max = v; }));
+  let html = `<div class="sgrid" role="table" aria-label="Probabilidad de cada marcador"><div></div>`;
+  for (let j = 0; j < 6; j++) html += `<div class="ax">${j}</div>`;
+  for (let i = 0; i < 6; i++) {
+    html += `<div class="ax">${i}</div>`;
+    for (let j = 0; j < 6; j++) {
+      const v = g[i][j], s = Math.round((v / max) * 88);
+      html += `<div class="c num${s > 52 ? " hi" : ""}" style="--v:${s}" title="${i}-${j}: ${dec(v * 100)} %">${v >= 0.005 ? Math.round(v * 100) : "·"}</div>`;
+    }
+  }
+  html += `</div><div class="sgrid-caption"><span>Filas: goles de ${esc(NM(h))}</span><span>Columnas: ${esc(NM(a))}</span></div>`;
+  return html;
+}
+const formChips = t => { const row = D.table.find(r => r.t === t); if (!row) return ""; return `<div class="form">${row.form.map(f => `<span class="f ${f.r}" title="${f.local ? "vs" : "en"} ${esc(NM(f.rival))}: ${f.gf}-${f.gc}">${f.r}</span>`).join("")}</div>`; };
+
+function matchCard(m, opts = {}) {
+  const c = cover(m.final);
+  const top = m.top[0];
+  const day = fmtDay(m.date || 0);
+  const when = opts.custom ? `<span>Partido a medida · solo modelo</span>` : `<span>${day.charAt(0).toUpperCase() + day.slice(1)} · ${m.time || "hora por fijar"}</span>`;
+  const compare = m.market ? `<div class="compare">
+      <div class="row"><span>Modelo</span>${probBar(m.model, m.home, m.away, true)}<span class="num">${m.model.map(x => Math.round(x * 100)).join(" · ")}</span></div>
+      <div class="row"><span>Casas</span>${probBar(m.market, m.home, m.away, true)}<span class="num">${m.market.map(x => Math.round(x * 100)).join(" · ")}</span></div>
+    </div>` : "";
+  const h2h = (m.h2h && m.h2h.length) ? `<div><div class="sub">Últimos enfrentamientos en Primera</div><ul class="h2h">${m.h2h.map(x => `<li><span>${fmtShort(x.d)}</span><span>${esc(NM(x.h))} <b class="num">${x.hg}-${x.ag}</b> ${esc(NM(x.a))}</span></li>`).join("")}</ul></div>` : "";
+  return `<article class="card match">
+    <div class="when">${when}<span class="sign" title="Cobertura sugerida para la quiniela">${c.label} · ${signText(c)}</span></div>
+    <div class="teams">
+      <div class="team home" title="${esc(NM(m.home))}">${badge(m.home)}<span>${esc(SN(m.home))}</span></div>
+      <div class="xg num">${dec(m.lh)} – ${dec(m.la)}<small>goles esperados</small></div>
+      <div class="team away" title="${esc(NM(m.away))}">${badge(m.away)}<span>${esc(SN(m.away))}</span></div>
+    </div>
+    ${probBar(m.final, m.home, m.away)}
+    <div class="plabels"><span>1 · <b>${pct(m.final[0])}</b></span><span>X · <b>${pct(m.final[1])}</b></span><span>2 · <b>${pct(m.final[2])}</b></span></div>
+    <dl class="facts">
+      <div><dt>Marcador</dt><dd class="num">${top[0]}-${top[1]} <small style="font-weight:500;color:var(--muted)">${Math.round(top[2] * 100)} %</small></dd></div>
+      <div><dt>+2,5 goles</dt><dd class="num">${pct(m.over)}</dd></div>
+      <div><dt>Ambos marcan</dt><dd class="num">${pct(m.btts)}</dd></div>
+    </dl>
+    ${compare}
+    <details class="more"><summary>Marcadores, forma e historial</summary>
+      <div class="more-body">
+        <div><div class="sub">Probabilidad de cada marcador (%)</div>${scoreGrid(m.grid, m.home, m.away)}</div>
+        <div class="two">
+          <div><div class="sub">Forma ${esc(NM(m.home))}</div>${formChips(m.home)}</div>
+          <div><div class="sub">Forma ${esc(NM(m.away))}</div>${formChips(m.away)}</div>
+        </div>
+        <div><div class="sub">Marcadores más probables</div><div class="num" style="font-size:14px">${m.top.map(s => `${s[0]}-${s[1]} <span style="color:var(--muted)">${dec(s[2] * 100)} %</span>`).join(" &nbsp;·&nbsp; ")}</div></div>
+        ${h2h}
+      </div>
+    </details>
+  </article>`;
+}
+
+// ---------- vistas ----------
+function viewJornada() {
+  const U = D.upcoming;
+  const el = $("#v-jornada");
+  if (!U.length) { el.innerHTML = `<div class="section-head"><h2>Próxima jornada</h2></div><p class="lead">Todavía no hay partidos publicados para los próximos días. Se rellenan en cuanto salen las cuotas, normalmente el martes o miércoles.</p>`; return; }
+  const range = fmtDay(U[0].date) + (U.length > 1 ? " – " + fmtDay(U[U.length - 1].date) : "");
+  const rows = U.map((m, i) => { const c = cover(m.final); return `<li>
+      <span class="n">${i + 1}</span>
+      <span class="vs" title="${esc(NM(m.home))} – ${esc(NM(m.away))}">${badge(m.home, true)}<span class="nm">${esc(SN(m.home))}</span><span class="sep">–</span><span class="nm">${esc(SN(m.away))}</span></span>
+      <span class="cells">${[0, 1, 2].map(k => `<span class="cell${k === c.main ? " main" : c.set.includes(k) ? " cover" : ""}">${SIGNS[k]}</span>`).join("")}</span>
+      <span class="cov">${c.label}</span></li>`; }).join("");
+  el.innerHTML = `
+    <div class="section-head"><h2>Próxima jornada</h2><p>${range} · ${U.length} partidos. Pronóstico = ${D.params.beta >= 0.999 ? "cuotas sin margen" : D.params.beta <= 0.001 ? "modelo" : "mezcla de modelo (" + Math.round((1 - D.params.beta) * 100) + " %) y cuotas (" + Math.round(D.params.beta * 100) + " %)"}, que es lo que mejor ha acertado en el backtest.</p></div>
+    <div class="card boleto">
+      <div class="boleto-head"><h3>Quiniela sugerida</h3><span>Fijo si un signo llega al 50 %, doble si dos suman 70 %, si no triple</span></div>
+      <ol>${rows}</ol>
+      <div class="boleto-legend"><span><span class="cell main">1</span> signo más probable</span><span><span class="cell cover">X</span> cubrir también</span></div>
+    </div>
+    <div class="matches">${U.map(m => matchCard(m)).join("")}</div>`;
+}
+
+function viewClasificacion() {
+  const T = D.table, S = Object.fromEntries(D.sim.map(s => [s.t, s]));
+  const rows = T.map(r => {
+    const dg = r.gf - r.gc, xd = r.xgf - r.xgc;
+    return `<tr class="${r.pos <= 4 ? "zone-ucl" : r.pos >= 18 ? "zone-rel" : ""}">
+      <td class="pos num">${r.pos}</td><td class="l tm">${badge(r.t, true)}${esc(NM(r.t))}</td>
+      <td class="pts num">${r.pts}</td><td class="num">${r.pj}</td><td class="num">${r.g}-${r.e}-${r.p}</td>
+      <td class="num">${r.gf}:${r.gc}</td><td class="num ${dg > 0 ? "pos-pos" : dg < 0 ? "pos-neg" : ""}">${dg > 0 ? "+" : ""}${dg}</td>
+      <td class="num">${dec(r.xgf)}:${dec(r.xgc)}</td><td class="num ${xd > 0 ? "pos-pos" : xd < 0 ? "pos-neg" : ""}">${xd > 0 ? "+" : ""}${dec(xd)}</td>
+      <td class="l">${formChips(r.t)}</td></tr>`;
+  }).join("");
+  const maxC = Math.max(...D.sim.map(s => s.champ)), maxT = Math.max(...D.sim.map(s => s.top4)), maxR = Math.max(...D.sim.map(s => s.releg));
+  const mini = (v, max, rel) => `<span class="mini${rel ? " rel" : ""}"><i style="width:${max > 0 ? Math.max(1, v / max * 44) : 1}px"></i><span>${v >= 0.995 ? ">99 %" : v > 0 && v < 0.005 ? "<1 %" : pct(v)}</span></span>`;
+  const srows = D.sim.map((s, i) => { const cur = T.find(r => r.t === s.t); return `<tr>
+      <td class="pos num">${i + 1}</td><td class="l tm">${badge(s.t, true)}${esc(NM(s.t))}</td>
+      <td class="num">${cur.pts}</td><td class="pts num">${dec(s.xpts, 0)}</td>
+      <td class="num">${mini(s.champ, maxC)}</td><td class="num">${mini(s.top4, maxT)}</td><td class="num">${mini(s.releg, maxR, true)}</td></tr>`; }).join("");
+  $("#v-clasificacion").innerHTML = `
+    <div class="section-head"><h2>Clasificación</h2><p>Tras ${D.played} partidos. xG = goles esperados por la calidad de las ocasiones: si un equipo marca muy por encima de su xG, lo normal es que baje.</p></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th class="l">Equipo</th><th>Pts</th><th>PJ</th><th>G-E-P</th><th>Goles</th><th>DG</th><th>xG</th><th>Dif. xG</th><th class="l">Últimos 5</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <div class="pos-legend"><span><i style="background:var(--home)"></i>Champions (1-4)</span><span><i style="background:var(--bad)"></i>Descenso (18-20)</span><span>G ganado · E empate · P perdido</span></div>
+    <div class="section-head" style="margin-top:12px"><h2>Cómo acabará</h2><p>${D.nSims.toLocaleString("es-ES")} simulaciones de los ${D.nRemaining} partidos que faltan, partido a partido con el modelo. Desempate aproximado por diferencia de goles.</p></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th class="l">Equipo</th><th>Pts hoy</th><th>Pts final</th><th>Campeón</th><th>Top 4</th><th>Desciende</th></tr></thead>
+      <tbody>${srows}</tbody></table></div>`;
+}
+
+function viewCara() {
+  const el = $("#v-cara-a-cara");
+  const teams = Object.keys(D.params.teams).sort((a, b) => NM(a).localeCompare(NM(b), "es"));
+  const opt = sel => teams.map(t => `<option value="${esc(t)}"${t === sel ? " selected" : ""}>${esc(NM(t))}</option>`).join("");
+  el.innerHTML = `
+    <div class="section-head"><h2>Cara a cara</h2><p>Cualquier partido entre dos equipos de Primera, con la fuerza actual de cada uno. Sale solo del modelo porque no hay cuotas.</p></div>
+    <div class="card picker">
+      <label for="selH">Local<select id="selH">${opt("Ath Bilbao")}</select></label>
+      <button class="swap" id="swap" type="button" aria-label="Intercambiar local y visitante">⇄</button>
+      <label for="selA">Visitante<select id="selA">${opt("Real Madrid")}</select></label>
+    </div>
+    <div id="caraOut" class="matches"></div>`;
+  const draw = () => {
+    const h = $("#selH").value, a = $("#selA").value;
+    if (h === a) { $("#caraOut").innerHTML = `<p class="lead">Elige dos equipos distintos.</p>`; return; }
+    const p = modelPredict(h, a);
+    const real = D.upcoming.find(u => u.home === h && u.away === a);
+    $("#caraOut").innerHTML = matchCard({ ...p, home: h, away: a, h2h: null }, { custom: true }) +
+      (real ? `<p class="lead">Este partido se juega en la próxima jornada: en la pestaña Jornada tienes el pronóstico con las cuotas.</p>` : "");
+  };
+  $("#selH").addEventListener("change", draw); $("#selA").addEventListener("change", draw);
+  $("#swap").addEventListener("click", () => { const x = $("#selH").value; $("#selH").value = $("#selA").value; $("#selA").value = x; draw(); });
+  draw();
+}
+
+// gráfico de dispersión ataque/defensa
+const tip = $("#tip");
+function showTip(e, html) { tip.innerHTML = html; tip.hidden = false; const x = Math.min(e.clientX + 14, window.innerWidth - tip.offsetWidth - 8); const y = Math.max(8, e.clientY - tip.offsetHeight - 12); tip.style.left = x + "px"; tip.style.top = y + "px"; }
+const hideTip = () => { tip.hidden = true; };
+
+function scatter(W) {
+  const small = W < 520;
+  const R = D.ratings, H = Math.round(small ? W * 1.05 : W * 0.62), m = { l: small ? 40 : 46, r: 12, t: 16, b: 44 };
+  const xs = R.map(r => r.att), ys = R.map(r => r.def);
+  const pad = 0.08;
+  const x0 = Math.min(...xs) - pad, x1 = Math.max(...xs) + pad, y0 = Math.min(...ys) - pad, y1 = Math.max(...ys) + pad;
+  const X = v => m.l + (v - x0) / (x1 - x0) * (W - m.l - m.r);
+  const Y = v => m.t + (v - y0) / (y1 - y0) * (H - m.t - m.b); // menos goles encajados = arriba
+  const ticks = (a, b, s) => { const out = []; for (let v = Math.ceil(a / s) * s; v <= b; v += s) out.push(+v.toFixed(2)); return out; };
+  const sx = (x1 - x0) / ((W - m.l - m.r) / 60) > 0.25 ? 0.5 : 0.25;
+  const sy = (y1 - y0) / ((H - m.t - m.b) / 40) > 0.25 ? 0.5 : 0.25;
+  let g = "";
+  for (const v of ticks(x0, x1, sx)) g += `<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--line)" stroke-width="1"/><text x="${X(v)}" y="${H - m.b + 18}" text-anchor="middle" font-size="12" fill="var(--muted)">${dec(v, 2)}</text>`;
+  for (const v of ticks(y0, y1, sy)) g += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${m.l - 8}" y="${Y(v) + 4}" text-anchor="end" font-size="12" fill="var(--muted)">${dec(v, 2)}</text>`;
+  const avgA = xs.reduce((a, b) => a + b) / xs.length, avgD = ys.reduce((a, b) => a + b) / ys.length;
+  g += `<line x1="${X(avgA)}" x2="${X(avgA)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--muted)" stroke-dasharray="3 4" stroke-width="1"/>`;
+  g += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(avgD)}" y2="${Y(avgD)}" stroke="var(--muted)" stroke-dasharray="3 4" stroke-width="1"/>`;
+  g += `<text x="${W - m.r}" y="${m.t + 12}" text-anchor="end" font-size="12" font-weight="600" fill="var(--muted)">Marca mucho y encaja poco</text>`;
+  g += `<text x="${m.l + 6}" y="${H - m.b - 8}" font-size="12" font-weight="600" fill="var(--muted)">Marca poco y encaja mucho</text>`;
+  g += `<text x="${(m.l + W - m.r) / 2}" y="${H - 6}" text-anchor="middle" font-size="12.5" fill="var(--fg)">${small ? "Goles a favor por partido →" : "Goles que marcaría por partido ante un rival medio →"}</text>`;
+  g += `<text transform="translate(13 ${(m.t + H - m.b) / 2}) rotate(-90)" text-anchor="middle" font-size="12.5" fill="var(--fg)">${small ? "← Goles en contra (arriba, menos)" : "← Goles que encajaría (arriba, menos)"}</text>`;
+  // etiquetas sin solaparse (también con los dos rótulos de las esquinas)
+  const placed = [{ x: W - m.r - 165, y: m.t, w: 165, h: 16 }, { x: m.l, y: H - m.b - 22, w: 160, h: 16 }];
+  const pts = R.map(r => ({ r, x: X(r.att), y: Y(r.def) }));
+  const overl = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  pts.forEach(p => placed.push({ x: p.x - 6, y: p.y - 6, w: 12, h: 12 }));
+  let dots = "", labels = "";
+  for (const p of pts) {
+    const w = 27, h = 13;
+    const cand = [[9, -6], [-9 - w, -6], [-w / 2, -21], [-w / 2, 9], [9, -16], [9, 4], [-9 - w, -16], [-9 - w, 4]];
+    let best = cand[0];
+    for (const [dx, dy] of cand) { const b = { x: p.x + dx, y: p.y + dy, w, h }; if (b.x < m.l || b.x + w > W - m.r || b.y < m.t || b.y + h > H - m.b) continue; if (!placed.some(q => overl(b, q))) { best = [dx, dy]; break; } }
+    placed.push({ x: p.x + best[0], y: p.y + best[1], w, h });
+    labels += `<text x="${p.x + best[0] + w / 2}" y="${p.y + best[1] + 10.5}" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--fg)">${AB(p.r.t)}</text>`;
+    dots += `<circle cx="${p.x}" cy="${p.y}" r="5.5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>`;
+    dots += `<circle class="hit" cx="${p.x}" cy="${p.y}" r="14" fill="transparent" data-t="${esc(p.r.t)}"/>`;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block;max-width:100%;height:auto" role="img" aria-label="Ataque y defensa de cada equipo">${g}${dots}${labels}</svg>`;
+}
+// los gráficos se dibujan al ancho real de su caja, para que el texto no encoja en el móvil
+function drawCharts() {
+  const s = $("#scatter"); if (s && s.offsetParent) s.innerHTML = scatter(Math.max(280, Math.round(s.clientWidth)));
+  const c = $("#calib"); if (c && c.offsetParent) c.innerHTML = calibChart(Math.max(280, Math.min(560, Math.round(c.clientWidth))));
+}
+let rsz; window.addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(drawCharts, 150); });
+
+function viewEquipos() {
+  const R = D.ratings, T = Object.fromEntries(D.table.map(r => [r.t, r]));
+  const rows = R.map((r, i) => { const t = T[r.t]; return `<tr>
+    <td class="pos num">${i + 1}</td><td class="l tm">${badge(r.t, true)}${esc(NM(r.t))}</td>
+    <td class="num">${dec(r.att, 2)}</td><td class="num">${dec(r.def, 2)}</td>
+    <td class="num">${dec(t.xgf / Math.max(1, t.nxg), 2)}</td><td class="num">${dec(t.xgc / Math.max(1, t.nxg), 2)}</td>
+    <td class="num">${dec(t.shpg)}</td><td class="num">${dec(t.sotpg)}</td><td class="num">${dec(t.sotcpg)}</td>
+    <td class="num">${dec(t.corpg)}</td><td class="num">${dec(t.yelpg)}</td><td class="num">${t.red}</td>
+    <td class="num">${t.homePts}/${t.homePj * 3}</td><td class="num">${t.awayPts}/${t.awayPj * 3}</td></tr>`; }).join("");
+  $("#v-equipos").innerHTML = `
+    <div class="section-head"><h2>Fuerza de cada equipo</h2><p>Lo que el modelo cree hoy: goles que marcaría y encajaría por partido contra un rival medio, en campo neutral.</p></div>
+    <div class="card chart-card"><h3>Ataque frente a defensa</h3><p class="note">Las líneas discontinuas marcan la media de Primera. Toca un punto para ver el dato.</p><div id="scatter"></div></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th class="l">Equipo</th><th>Ataque</th><th>Defensa</th><th>xG/pj</th><th>xG contra</th><th>Tiros</th><th>A puerta</th><th>A puerta contra</th><th>Córners</th><th>Amarillas</th><th>Rojas</th><th>Pts casa</th><th>Pts fuera</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>
+    <p class="lead" style="font-size:13px">Ataque y defensa: goles por partido según el modelo. El resto son medias por partido de esta temporada. Puntos en casa y fuera sobre los posibles.</p>`;
+  const svg = $("#scatter");
+  const by = Object.fromEntries(R.map(r => [r.t, r]));
+  svg.addEventListener("pointermove", e => { const t = e.target.closest(".hit"); if (!t) return hideTip(); const r = by[t.dataset.t]; showTip(e, `<b>${esc(NM(r.t))}</b><br>Marcaría ${dec(r.att, 2)} por partido<br>Encajaría ${dec(r.def, 2)} por partido`); });
+  svg.addEventListener("pointerleave", hideTip);
+  svg.addEventListener("pointerdown", e => { const t = e.target.closest(".hit"); if (t) { const r = by[t.dataset.t]; showTip(e, `<b>${esc(NM(r.t))}</b><br>Marcaría ${dec(r.att, 2)} por partido<br>Encajaría ${dec(r.def, 2)} por partido`); } });
+}
+
+function calibChart(W) {
+  const C = D.backtest.calibration, H = Math.round(W * 0.72), m = { l: 44, r: 14, t: 12, b: 40 };
+  const X = v => m.l + v * (W - m.l - m.r), Y = v => H - m.b - v * (H - m.t - m.b);
+  let g = "";
+  for (const v of [0, 0.25, 0.5, 0.75, 1]) {
+    g += `<line x1="${X(v)}" x2="${X(v)}" y1="${m.t}" y2="${H - m.b}" stroke="var(--line)"/><text x="${X(v)}" y="${H - m.b + 17}" text-anchor="middle" font-size="12" fill="var(--muted)">${Math.round(v * 100)} %</text>`;
+    g += `<line x1="${m.l}" x2="${W - m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${m.l - 7}" y="${Y(v) + 4}" text-anchor="end" font-size="12" fill="var(--muted)">${Math.round(v * 100)} %</text>`;
+  }
+  g += `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(1)}" y2="${Y(1)}" stroke="var(--muted)" stroke-dasharray="4 4"/>`;
+  g += `<polyline fill="none" stroke="var(--accent)" stroke-width="2" points="${C.map(c => X(c.p) + "," + Y(c.f)).join(" ")}"/>`;
+  g += C.map(c => `<circle cx="${X(c.p)}" cy="${Y(c.f)}" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/><circle class="hit" cx="${X(c.p)}" cy="${Y(c.f)}" r="14" fill="transparent" data-p="${c.p}" data-f="${c.f}" data-n="${c.n}"/>`).join("");
+  g += `<text x="${(m.l + W - m.r) / 2}" y="${H - 5}" text-anchor="middle" font-size="12.5" fill="var(--fg)">Probabilidad que dio el pronóstico</text>`;
+  g += `<text transform="translate(12 ${(m.t + H - m.b) / 2}) rotate(-90)" text-anchor="middle" font-size="12.5" fill="var(--fg)">Lo que pasó de verdad</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" style="display:block;max-width:100%;height:auto" role="img" aria-label="Calibración: probabilidad pronosticada frente a frecuencia real">${g}</svg>`;
+}
+
+function viewFiabilidad() {
+  const B = D.backtest, C = D.current;
+  const n = B.model.n, seasons = B.seasons.map(s => "20" + s.slice(0, 2) + "-" + s.slice(2)).join(" y ");
+  const pureMk = D.params.beta >= 0.999;
+  const bars = (pureMk ? [["Cuotas (lo que usa la app)", B.market.acc, false]] : [["Pronóstico de la app", B.blended.acc, false], ["Cuotas de las casas", B.market.acc, false]])
+    .concat([["Solo el modelo", B.model.acc, false], ["Siempre el local", B.naive.acc, true], ["Al azar", 1 / 3, true]]);
+  const maxA = 0.6;
+  const hb = bars.map(([l, v, ref]) => `<div class="hbar${ref ? " ref" : ""}"><span>${l}</span><span class="track"><i style="width:${v / maxA * 100}%"></i></span><b class="num">${dec(v * 100)} %</b></div>`).join("");
+  const recent = C.recent.map(r => `<li><span class="ico ${r.ok ? "ok" : "ko"}" aria-label="${r.ok ? "acertado" : "fallado"}">${r.ok ? "✓" : "✕"}</span><span>${esc(NM(r.h))} <b class="num">${r.hg}-${r.ag}</b> ${esc(NM(r.a))}</span><span class="num" style="color:var(--muted);font-size:12.5px">${r.p.map(x => Math.round(x * 100)).join("·")}</span></li>`).join("");
+  $("#v-fiabilidad").innerHTML = `
+    <div class="section-head"><h2>¿Cuánto acierta?</h2><p>Probado sobre ${n} partidos de ${seasons}: cada semana se predijo solo con los datos que había antes, como si fuera en directo.</p></div>
+    <div class="scores">
+      <div class="card score"><span class="lbl">Acierto 1X2</span><span class="big num">${dec(B.blended.acc * 100)} %</span><span class="why">El signo más probable salió en ${Math.round(B.blended.acc * n)} de ${n} partidos.</span></div>
+      <div class="card score"><span class="lbl">Esta temporada</span><span class="big num">${C.hitFinal}/${C.n}</span><span class="why">Partidos acertados desde el ${fmtDate(C.from)} (${dec(C.hitFinal / Math.max(1, C.n) * 100)} %).</span></div>
+      <div class="card score"><span class="lbl">Mejora sobre ir al local</span><span class="big num">+${dec((B.blended.acc - B.naive.acc) * 100)}</span><span class="why">Puntos de acierto por encima de marcar siempre un 1 (${dec(B.naive.acc * 100)} %).</span></div>
+    </div>
+    <div class="grid2">
+      <div class="card chart-card"><h3>Partidos acertados, ${seasons}</h3><p class="note">En Primera ningún sistema pasa mucho del 55 %: hay demasiados empates y sorpresas.</p><div class="hbars">${hb}</div></div>
+      <div class="card chart-card"><h3>¿Las probabilidades dicen la verdad?</h3><p class="note">Si la app da un 40 %, ese resultado debería salir unas 4 de cada 10 veces. Cuanto más pegado a la diagonal, mejor.</p><div id="calib"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card chart-card"><h3>Últimos 10 pronósticos</h3><p class="note">Resultado real y probabilidades que dio la app antes del partido (1·X·2).</p><ul class="recent">${recent}</ul></div>
+      <div class="card chart-card prose">
+        <h3>Cómo funciona</h3>
+        <p>Cada equipo tiene una fuerza de ataque y otra de defensa, calculadas con ${D.totalMatches.toLocaleString("es-ES")} partidos de Primera y Segunda desde 2022. Segunda sirve para medir bien a los recién ascendidos.</p>
+        <p>De cada partido ya jugado el modelo mira sobre todo los goles que esperaban las casas antes del pitido (${Math.round(D.cfg.m * 100)} %), y en menor medida el resultado, el xG y los tiros a puerta (${Math.round((1 - D.cfg.m) * 100)} %). Se probaron mezclas con más peso de goles y xG y acertaban menos. Lo reciente pesa más: un partido de hace ${D.cfg.halfLife} días cuenta la mitad que uno de ayer. Con esas fuerzas sale la probabilidad de cada marcador (Poisson con la corrección de Dixon-Coles para el 0-0 y el 1-1).</p>
+        <p>${D.params.beta >= 0.999 ? "Para el 1X2 de la próxima jornada nada batió a las cuotas del día, que ya saben de lesiones, rotaciones y alineaciones. Por eso el pronóstico de la jornada usa esas cuotas quitándoles el margen de la casa. El modelo se encarga de lo que las cuotas no cubren: simular la temporada entera y cualquier cruce de Cara a cara." : "El pronóstico de la jornada mezcla el modelo con las cuotas del día, que ya saben de lesiones, rotaciones y alineaciones."}</p>
+      </div>
+    </div>`;
+  const svg = $("#calib");
+  svg.addEventListener("pointermove", e => { const t = e.target.closest(".hit"); if (!t) return hideTip(); showTip(e, `Pronóstico medio ${dec(t.dataset.p * 100)} %<br>Pasó en el ${dec(t.dataset.f * 100)} %<br>${t.dataset.n} casos`); });
+  svg.addEventListener("pointerleave", hideTip);
+}
+
+// ---------- arranque ----------
+function header() {
+  $("#season").textContent = "Temporada " + D.season;
+  $("#meta").innerHTML = `<span>Datos hasta <b>${fmtDate(D.lastMatch)}</b></span><span><b>${D.played}</b> partidos jugados</span><span>Actualizado <b>${fmtDate(D.generated)}</b></span>`;
+  $("#foot").innerHTML = `Datos: football-data.co.uk (resultados, xG, tiros, córners, tarjetas y cuotas medias). Pronósticos orientativos: el fútbol no se deja predecir del todo.`;
+}
+const VIEWS = ["jornada", "clasificacion", "cara-a-cara", "equipos", "fiabilidad"];
+function route() {
+  const v = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "jornada";
+  VIEWS.forEach(x => { $("#v-" + x).hidden = x !== v; });
+  document.querySelectorAll("nav.tabs a").forEach(a => { if (a.dataset.v === v) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  hideTip();
+  drawCharts();
+}
+header(); viewJornada(); viewClasificacion(); viewCara(); viewEquipos(); viewFiabilidad();
+route();
+window.addEventListener("hashchange", () => { route(); window.scrollTo(0, 0); });
+document.addEventListener("scroll", hideTip, { passive: true });
+</script>
+</body></html>
